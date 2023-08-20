@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -8,11 +9,20 @@ namespace FlappyBird
         [SerializeField]
         private float speed;
         [SerializeField]
-        private float timeToDestroyPipe;
+        private float timeToDeactivatePipe;
+        [SerializeField]
+        private Sprite pipeUpDay, pipeUpNight, pipeDownDay, pipeDownNight;
 
-        private void Start()
+        public bool darkMode;
+
+        private void OnEnable()
         {
-            StartCoroutine(DestroyPipe());
+            StartCoroutine(DeactivatePipe());
+        }
+
+        private void Awake()
+        {
+            ChangeColor();
         }
 
         private void Update()
@@ -23,11 +33,34 @@ namespace FlappyBird
             transform.position += (Vector3.left * Time.deltaTime * speed);
         }
 
-        private IEnumerator DestroyPipe()
+        private IEnumerator DeactivatePipe()
         {
-            yield return new WaitForSeconds(timeToDestroyPipe);
+            yield return new WaitForSeconds(timeToDeactivatePipe);
 
-            Destroy(gameObject);
+            gameObject.SetActive(false);
         }
+        
+        private void ChangeColor()
+        {
+
+            GameObject pipeUp = GameObject.Find("PipeUp");
+            GameObject pipeDown = GameObject.Find("PipeDown");
+            if (darkMode == true)
+            {   
+                
+                pipeUp.GetComponent<SpriteRenderer>().sprite = pipeUpNight;
+                pipeDown.GetComponent<SpriteRenderer>().sprite = pipeDownNight;
+            }
+            else
+            {
+                
+                pipeUp.GetComponent<SpriteRenderer>().sprite = pipeUpDay;
+                pipeDown.GetComponent<SpriteRenderer>().sprite = pipeDownDay;
+            }
+            
+        }
+
+        
+        
     }
 }

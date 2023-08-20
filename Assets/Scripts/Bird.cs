@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 
 namespace FlappyBird
@@ -8,13 +9,27 @@ namespace FlappyBird
         private Rigidbody2D rigidbody2D;
         [SerializeField, Range(0, 10)]
         private float speed;
+        [SerializeField]
+        private List<RuntimeAnimatorController> birdAnimatorControllers;
 
         private void Awake()
         {
             if (rigidbody2D == null)
                 rigidbody2D = GetComponent<Rigidbody2D>();
+            
+            if (birdAnimatorControllers.Count > 0)
+            {
+                int randomIndex = Random.Range(0, birdAnimatorControllers.Count);
+                RuntimeAnimatorController selectedController = birdAnimatorControllers[randomIndex];
+                
+                Animator animator = GetComponent<Animator>();
+                if (animator != null)
+                {
+                    animator.runtimeAnimatorController = selectedController;
+                }
+            }
         }
-
+        
         private void Update()
         {
             if (GameManager.Instance.isGameOver)

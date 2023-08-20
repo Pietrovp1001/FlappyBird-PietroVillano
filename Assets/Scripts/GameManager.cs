@@ -47,7 +47,7 @@ namespace FlappyBird
         {
             scoreCount++;
 
-            if (onIncreaseScore != null)
+            if (onIncreaseScore != null) 
                 onIncreaseScore.Invoke();
         }
         private IEnumerator ReloadScene()

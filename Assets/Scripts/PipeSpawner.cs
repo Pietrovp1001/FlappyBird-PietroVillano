@@ -1,12 +1,15 @@
+using System;
 using System.Collections;
 using UnityEngine;
+using UnityEngine.Serialization;
+using Random = UnityEngine.Random;
 
 namespace FlappyBird
 {
     public class PipeSpawner : MonoBehaviour
     {
         [SerializeField]
-        private GameObject pipe;
+        private PipePool pipePool;
         [SerializeField]
         private Transform spawnPoint;
 
@@ -19,10 +22,41 @@ namespace FlappyBird
         private float timeToSpawnFirstPipe;
         [SerializeField]
         private float timeToSpawnPipe;
+        
+        [SerializeField]
+        private Pipe pipePrefab;
+
+        [SerializeField] 
+        private GameObject background;
+        [SerializeField] 
+        private Sprite backgroundDay, backgroundNight;
+        [Header("Seleccionar la hora a la cual quiere que se active el modo noche. Formato 00 - 23h")] [Tooltip("Solo se debe escribir la hora.")] [SerializeField]
+        int startDarkModeAt = 18;
+
+        private void Awake()
+        {
+            DateTime actualTime = DateTime.Now;
+            int hora = actualTime.Hour;
+            
+            
+            
+            if (hora >= startDarkModeAt)
+            {
+                pipePrefab.darkMode = true;
+                background.GetComponent<SpriteRenderer>().sprite = backgroundNight;
+            }
+            else
+            {
+                pipePrefab.darkMode = false;
+                background.GetComponent<SpriteRenderer>().sprite = backgroundDay;
+            }
+        }
 
         private void Start()
         {
             StartCoroutine(SpawnPipes());
+            
+            
         }
 
         private Vector3 GetSpawnPosition()
@@ -34,14 +68,18 @@ namespace FlappyBird
         {
             yield return new WaitForSeconds(timeToSpawnFirstPipe);
 
-            Instantiate(pipe, GetSpawnPosition(), Quaternion.identity);
-
-            do
+            while (true)
             {
-                yield return new WaitForSeconds(timeToSpawnPipe);
+                GameObject newPipe = pipePool.GetPooledPipe();
 
-                Instantiate(pipe, GetSpawnPosition(), Quaternion.identity);
-            } while (true);
+                if (newPipe != null)
+                {
+                    newPipe.transform.position = GetSpawnPosition();
+                    newPipe.SetActive(true);
+                }
+
+                yield return new WaitForSeconds(timeToSpawnPipe);
+            }
         }
 
         public void Stop()
