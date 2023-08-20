@@ -178,7 +178,7 @@ MonoBehaviour:
   background: {fileID: 956281934}
   backgroundDay: {fileID: 1357637228, guid: 63d98d6bd04ca9b40921555fd869d8d0, type: 3}
   backgroundNight: {fileID: 1645633249, guid: 63d98d6bd04ca9b40921555fd869d8d0, type: 3}
-  startDarkModeAt: 12
+  startDarkModeAt: 18
 --- !u!114 &73087743
 MonoBehaviour:
   m_ObjectHideFlags: 0
